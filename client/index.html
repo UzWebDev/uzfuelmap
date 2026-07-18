@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>UzFuelMap</title>
+<title>Fargona Metan Map</title>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
@@ -19,43 +19,18 @@ height:100vh;
 width:100%;
 }
 
-.panel{
+.header{
 position:absolute;
 top:10px;
 left:50%;
 transform:translateX(-50%);
 z-index:1000;
 background:white;
-padding:12px;
+padding:12px 20px;
 border-radius:15px;
-box-shadow:0 3px 15px #555;
-width:85%;
-max-width:400px;
-}
-
-.title{
-font-size:22px;
+box-shadow:0 3px 15px #777;
+font-size:20px;
 font-weight:bold;
-text-align:center;
-}
-
-input{
-width:100%;
-padding:10px;
-margin-top:10px;
-border-radius:10px;
-border:1px solid #ccc;
-}
-
-button{
-margin-top:10px;
-width:100%;
-padding:10px;
-border:0;
-border-radius:10px;
-background:#008000;
-color:white;
-font-size:16px;
 }
 </style>
 
@@ -63,31 +38,20 @@ font-size:16px;
 
 <body>
 
-<div class="panel">
-<div class="title">⛽ UzFuelMap</div>
-
-<input id="search" placeholder="Zapravka qidirish...">
-
-<button onclick="myLocation()">
-📍 Mening joylashuvim
-</button>
-<button onclick="findNearest()">
-⛽ Eng yaqin zapravka
-</button>
+<div class="header">
+🚗 Fargona Metan Map
 </div>
-
 
 <div id="map"></div>
 
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-
 <script>
 
 const map=L.map("map").setView(
-[40.7821,72.3442],
-12
+[40.3864,71.7864],
+11
 );
 
 
@@ -99,160 +63,38 @@ maxZoom:19
 ).addTo(map);
 
 
-// Zapravkalar
+// Namuna metan zapravkalar
 
-const stations=[
-
+const metan=[
 {
-name:"Farg‘ona Petrol",
+name:"Fargona Metan 1",
 lat:40.3864,
 lng:71.7864,
-fuel:"AI-80, AI-92, AI-95"
+status:"🟢 Ishlayapti"
 },
 
 {
-name:"Marg‘ilon Yoqilg‘i",
+name:"Margilon Metan",
 lat:40.4721,
 lng:71.7246,
-fuel:"AI-92, AI-95, Gaz"
-},
-
-{
-name:"Qo‘qon Yoqilg‘i",
-lat:40.5286,
-lng:70.9428,
-fuel:"AI-80, AI-92"
-},
-
-{
-name:"Rishton Yoqilg‘i",
-lat:40.3565,
-lng:71.2847,
-fuel:"AI-92, Gaz"
-},
-
-{
-name:"Quva Yoqilg‘i",
-lat:40.5220,
-lng:72.0730,
-fuel:"AI-80, AI-92"
-},
-
-{
-name:"Oltiariq Yoqilg‘i",
-lat:40.3910,
-lng:71.4740,
-fuel:"AI-92, AI-95"
-},
-
-{
-name:"Beshariq Yoqilg‘i",
-lat:40.4350,
-lng:70.6100,
-fuel:"AI-80, AI-92"
+status:"🟢 Ishlayapti"
 }
 
 ];
 
 
-stations.forEach(s=>{
+metan.forEach(m=>{
 
-L.marker([s.lat,s.lng])
+L.marker([m.lat,m.lng])
 .addTo(map)
 .bindPopup(
-"<b>⛽ "+s.name+
-"</b><br>Yoqilg'i: "+s.fuel
+"<b>🚗 "+m.name+
+"</b><br>"+m.status
 );
 
 });
 
 
-// Qidiruv
-
-document.getElementById("search")
-.addEventListener("input",function(){
-
-let text=this.value.toLowerCase();
-
-stations.forEach(s=>{
-
-if(s.name.toLowerCase().includes(text)){
-
-map.setView(
-[s.lat,s.lng],
-15
-);
-
-}
-
-});
-
-});
-
-
-// Joylashuv
-
-function myLocation(){
-
-map.locate({
-setView:true,
-maxZoom:16
-});
-
-}
-
-function findNearest(){
-
-if(!navigator.geolocation){
-alert("Joylashuv ishlamaydi");
-return;
-}
-
-navigator.geolocation.getCurrentPosition(pos=>{
-
-let userLat=pos.coords.latitude;
-let userLng=pos.coords.longitude;
-
-let nearest=null;
-let minDist=999999;
-
-
-stations.forEach(s=>{
-
-let d=Math.sqrt(
-Math.pow(userLat-s.lat,2)+
-Math.pow(userLng-s.lng,2)
-);
-
-if(d<minDist){
-minDist=d;
-nearest=s;
-}
-
-});
-
-
-if(nearest){
-
-map.setView(
-[nearest.lat,nearest.lng],
-16
-);
-
-L.popup()
-.setLatLng([nearest.lat,nearest.lng])
-.setContent(
-"⛽ <b>"+nearest.name+
-"</b><br>Yoqilg‘i: "+
-nearest.fuel
-)
-.openOn(map);
-
-}
-
-});
-
-}
 </script>
 
 </body>
