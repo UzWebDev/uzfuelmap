@@ -1,0 +1,18 @@
+[
+  {
+    "id":1,
+    "name":"Fargona Metan 1",
+    "lat":40.3864,
+    "lng":71.7864,
+    "status":"working",
+    "queue":10
+  },
+  {
+    "id":2,
+    "name":"Margilon Metan",
+    "lat":40.4721,
+    "lng":71.7246,
+    "status":"working",
+    "queue":20
+  }
+]

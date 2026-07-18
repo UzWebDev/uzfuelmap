@@ -13,35 +13,34 @@ L.tileLayer(
 {
 maxZoom:19
 }
+).addTo(map);const map = L.map("map").setView(
+    [40.3864,71.7864],
+    11
+);
+
+
+L.tileLayer(
+"https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+{
+maxZoom:19
+}
 ).addTo(map);
 
 
-// Namuna metan zapravkalar
+// Server API dan zapravkalarni olish
 
-const stations = [
-
-{
-name:"Farg‘ona Metan 1",
-lat:40.3864,
-lng:71.7864,
-status:"🟢 Ishlayapti",
-queue:"10 daqiqa"
-},
-
-{
-name:"Marg‘ilon Metan",
-lat:40.4721,
-lng:71.7246,
-status:"🟢 Ishlayapti",
-queue:"20 daqiqa"
-}
-
-];
+fetch("../server/api/stations.php")
+.then(response => response.json())
+.then(stations => {
 
 
-// Markerlarni chiqarish
+stations.forEach(station => {
 
-stations.forEach(station=>{
+
+let color = station.status === "working"
+? "🟢"
+: "🔴";
+
 
 L.marker([
 station.lat,
@@ -52,11 +51,17 @@ station.lng
 
 <b>🚗 ${station.name}</b>
 <br>
-Holat: ${station.status}
+Holat: ${color}
 <br>
-Navbat: ${station.queue}
+Navbat: ${station.queue} daqiqa
 
 `);
 
+
 });
 
+
+})
+.catch(error=>{
+console.log("Xatolik:",error);
+});
