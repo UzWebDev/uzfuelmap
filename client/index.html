@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UzFuelMap</title>
+</head>
+
+<body>
+
+<h1>⛽ UzFuelMap</h1>
+
+<button onclick="loadStations()">
+AYoQShlarni yuklash
+</button>
+
+<div id="result"></div>
+
+<script>
+async function loadStations() {
+    const response = await fetch("http://127.0.0.1:5000/stations");
+    const stations = await response.json();
+
+    let html = "";
+
+    stations.forEach(st => {
+        html += `
+        <div style="border:1px solid #000;padding:10px;margin:10px">
+            <h3>${st.name}</h3>
+            <p>${st.city}</p>
+            <p>${st.fuel.join(", ")}</p>
+            <p>${st.status}</p>
+        </div>
+        `;
+    });
+
+    document.getElementById("result").innerHTML = html;
+}
+</script>
+
+</body>
+</html>
