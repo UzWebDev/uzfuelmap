@@ -6,33 +6,9 @@
 
 <title>Fargona Metan Map</title>
 
+<link rel="stylesheet" href="style.css">
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-
-<style>
-body{
-margin:0;
-font-family:Arial,sans-serif;
-}
-
-#map{
-height:100vh;
-width:100%;
-}
-
-.header{
-position:absolute;
-top:10px;
-left:50%;
-transform:translateX(-50%);
-z-index:1000;
-background:white;
-padding:12px 20px;
-border-radius:15px;
-box-shadow:0 3px 15px #777;
-font-size:20px;
-font-weight:bold;
-}
-</style>
 
 </head>
 
@@ -47,75 +23,7 @@ font-weight:bold;
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script>
-
-const map=L.map("map").setView(
-[40.3864,71.7864],
-11
-);
-
-
-L.tileLayer(
-"https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-{
-maxZoom:19
-}
-).addTo(map);
-
-
-// Namuna metan zapravkalar
-
-const query = `
-[out:json];
-(
-node["amenity"="fuel"](40.2,71.0,40.7,72.2);
-way["amenity"="fuel"](40.2,71.0,40.7,72.2);
-);
-out center;
-`;
-
-fetch("https://overpass-api.de/api/interpreter", {
-method:"POST",
-body:query
-})
-.then(r=>r.json())
-.then(data=>{
-
-console.log(data);
-
-data.elements.forEach(e=>{
-
-let lat=e.lat || e.center.lat;
-let lng=e.lon || e.center.lon;
-
-let name=e.tags.name || "Metan zapravka";
-
-L.marker([lat,lng])
-.addTo(map)
-.bindPopup(
-"<b>🚗 "+name+
-"</b><br>⛽ CNG/Metan"
-);
-
-});
-
-})
-.catch(err=>console.log(err));
-
-
-metan.forEach(m=>{
-
-L.marker([m.lat,m.lng])
-.addTo(map)
-.bindPopup(
-"<b>🚗 "+m.name+
-"</b><br>"+m.status
-);
-
-});
-
-
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
