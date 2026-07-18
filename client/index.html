@@ -67,10 +67,9 @@ maxZoom:19
 
 const query = `
 [out:json];
-area["name"="Farg‘ona viloyati"]->.a;
 (
-node["amenity"="fuel"](area.a);
-way["amenity"="fuel"](area.a);
+node["amenity"="fuel"](40.2,71.0,40.7,72.2);
+way["amenity"="fuel"](40.2,71.0,40.7,72.2);
 );
 out center;
 `;
@@ -79,8 +78,10 @@ fetch("https://overpass-api.de/api/interpreter", {
 method:"POST",
 body:query
 })
-.then(res=>res.json())
+.then(r=>r.json())
 .then(data=>{
+
+console.log(data);
 
 data.elements.forEach(e=>{
 
@@ -93,12 +94,13 @@ L.marker([lat,lng])
 .addTo(map)
 .bindPopup(
 "<b>🚗 "+name+
-"</b><br>⛽ Metan (CNG)"
+"</b><br>⛽ CNG/Metan"
 );
 
 });
 
-});
+})
+.catch(err=>console.log(err));
 
 
 metan.forEach(m=>{
