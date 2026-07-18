@@ -65,22 +65,40 @@ maxZoom:19
 
 // Namuna metan zapravkalar
 
-const metan=[
-{
-name:"Fargona Metan 1",
-lat:40.3864,
-lng:71.7864,
-status:"🟢 Ishlayapti"
-},
+const query = `
+[out:json];
+area["name"="Farg‘ona viloyati"]->.a;
+(
+node["amenity"="fuel"](area.a);
+way["amenity"="fuel"](area.a);
+);
+out center;
+`;
 
-{
-name:"Margilon Metan",
-lat:40.4721,
-lng:71.7246,
-status:"🟢 Ishlayapti"
-}
+fetch("https://overpass-api.de/api/interpreter", {
+method:"POST",
+body:query
+})
+.then(res=>res.json())
+.then(data=>{
 
-];
+data.elements.forEach(e=>{
+
+let lat=e.lat || e.center.lat;
+let lng=e.lon || e.center.lon;
+
+let name=e.tags.name || "Metan zapravka";
+
+L.marker([lat,lng])
+.addTo(map)
+.bindPopup(
+"<b>🚗 "+name+
+"</b><br>⛽ Metan (CNG)"
+);
+
+});
+
+});
 
 
 metan.forEach(m=>{
