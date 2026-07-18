@@ -6,7 +6,7 @@
 
 <title>UzFuelMap</title>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
 body{
@@ -14,23 +14,48 @@ margin:0;
 font-family:Arial,sans-serif;
 }
 
-#top{
-position:absolute;
-z-index:1000;
-top:10px;
-left:50%;
-transform:translateX(-50%);
-background:white;
-padding:10px 20px;
-border-radius:15px;
-box-shadow:0 2px 10px #555;
-font-size:20px;
-font-weight:bold;
-}
-
 #map{
 height:100vh;
 width:100%;
+}
+
+.panel{
+position:absolute;
+top:10px;
+left:50%;
+transform:translateX(-50%);
+z-index:1000;
+background:white;
+padding:12px;
+border-radius:15px;
+box-shadow:0 3px 15px #555;
+width:85%;
+max-width:400px;
+}
+
+.title{
+font-size:22px;
+font-weight:bold;
+text-align:center;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:10px;
+border-radius:10px;
+border:1px solid #ccc;
+}
+
+button{
+margin-top:10px;
+width:100%;
+padding:10px;
+border:0;
+border-radius:10px;
+background:#008000;
+color:white;
+font-size:16px;
 }
 </style>
 
@@ -38,20 +63,34 @@ width:100%;
 
 <body>
 
-<div id="top">⛽ UzFuelMap</div>
+<div class="panel">
+<div class="title">⛽ UzFuelMap</div>
+
+<input id="search" placeholder="Zapravka qidirish...">
+
+<button onclick="myLocation()">
+📍 Mening joylashuvim
+</button>
+
+</div>
+
 
 <div id="map"></div>
 
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+
 <script>
 
-const map=L.map("map").setView([41.3111,69.2797],12);
+const map=L.map("map").setView(
+[40.7821,72.3442],
+12
+);
 
 
 L.tileLayer(
-"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+"https://tile.openstreetmap.org/{z}/{x}/{y}.png",
 {
 maxZoom:19
 }
@@ -59,19 +98,30 @@ maxZoom:19
 
 
 // Zapravkalar
+
 const stations=[
+
 {
-name:"UzGasOil",
-lat:41.3111,
-lng:69.2797,
+name:"UzFuel Marg'ilon",
+lat:40.472,
+lng:71.724,
 fuel:"AI-92, AI-95"
 },
+
+{
+name:"Farg'ona Petrol",
+lat:40.386,
+lng:71.786,
+fuel:"AI-80, AI-92"
+},
+
 {
 name:"Lukoil",
-lat:41.325,
-lng:69.240,
+lat:41.311,
+lng:69.279,
 fuel:"AI-95"
 }
+
 ];
 
 
@@ -81,10 +131,45 @@ L.marker([s.lat,s.lng])
 .addTo(map)
 .bindPopup(
 "<b>⛽ "+s.name+
-"</b><br>Yoqilg‘i: "+s.fuel
+"</b><br>Yoqilg'i: "+s.fuel
 );
 
 });
+
+
+// Qidiruv
+
+document.getElementById("search")
+.addEventListener("input",function(){
+
+let text=this.value.toLowerCase();
+
+stations.forEach(s=>{
+
+if(s.name.toLowerCase().includes(text)){
+
+map.setView(
+[s.lat,s.lng],
+15
+);
+
+}
+
+});
+
+});
+
+
+// Joylashuv
+
+function myLocation(){
+
+map.locate({
+setView:true,
+maxZoom:16
+});
+
+}
 
 
 </script>
