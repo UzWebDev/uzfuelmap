@@ -71,7 +71,9 @@ font-size:16px;
 <button onclick="myLocation()">
 📍 Mening joylashuvim
 </button>
-
+<button onclick="findNearest()">
+⛽ Eng yaqin zapravka
+</button>
 </div>
 
 
@@ -199,7 +201,58 @@ maxZoom:16
 
 }
 
+function findNearest(){
 
+if(!navigator.geolocation){
+alert("Joylashuv ishlamaydi");
+return;
+}
+
+navigator.geolocation.getCurrentPosition(pos=>{
+
+let userLat=pos.coords.latitude;
+let userLng=pos.coords.longitude;
+
+let nearest=null;
+let minDist=999999;
+
+
+stations.forEach(s=>{
+
+let d=Math.sqrt(
+Math.pow(userLat-s.lat,2)+
+Math.pow(userLng-s.lng,2)
+);
+
+if(d<minDist){
+minDist=d;
+nearest=s;
+}
+
+});
+
+
+if(nearest){
+
+map.setView(
+[nearest.lat,nearest.lng],
+16
+);
+
+L.popup()
+.setLatLng([nearest.lat,nearest.lng])
+.setContent(
+"⛽ <b>"+nearest.name+
+"</b><br>Yoqilg‘i: "+
+nearest.fuel
+)
+.openOn(map);
+
+}
+
+});
+
+}
 </script>
 
 </body>
